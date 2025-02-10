@@ -1,38 +1,22 @@
 
-import './App.css'
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-function App() {
+import ProductCard from "./components/ProductCard"
+import { products } from "./Data";
+const App =()=> {
 
+  // ** Renders
+  const renderProductList =()=>{
+    return products.map(product=><ProductCard key={product.id} product={product}/>)
+  }
+return (
+    <main className="container">
+    <div className=" m-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 p-4 rounded-md">
+ {renderProductList()}
+ </div>
 
-  return (
-    <>
-       <Menu>
-      <MenuButton>My account</MenuButton>
-      <MenuItems anchor="bottom">
-        <MenuItem>
-          <a className="block data-[focus]:bg-blue-100" href="/settings">
-            Settings
-          </a>
-        </MenuItem>
-        <MenuItem>
-          <a className="block data-[focus]:bg-blue-100" href="/support">
-            Support
-          </a>
-        </MenuItem>
-        <MenuItem>
-          <a className="block data-[focus]:bg-blue-100" href="/license">
-            License
-          </a>
-        </MenuItem>
-      </MenuItems>
-    </Menu>
-  <h1 className="text-3xl font-bold underline">
-    Hello world!
-  </h1>
-  <p className='m-2 bg-black'>mohamed atjer</p>
-    </>
-  )
+    </main>
+
+)
+
 }
-
-export default App
+export default App ;
 
