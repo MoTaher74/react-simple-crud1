@@ -13,3 +13,4 @@ export function textSlice(txt:string,maxSize:number=50){
     if(txt.length>=maxSize) return txt.slice(0,maxSize)+"...";
     return txt;
 }
+

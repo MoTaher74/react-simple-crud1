@@ -1,7 +1,7 @@
 export interface IProduct{
-    id:number,
+    id:number | string,
     title:string,
-    price:number,
+    price:string,
     description:string,
     category:string,
     image:string,
@@ -19,7 +19,7 @@ export interface IProps{
 
 export interface IFormInput{
     id:string ;
-    name:string;
+    name:'title'|'description'|'image'|'price';
     label:string;
     type:string
 }
