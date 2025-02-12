@@ -3,11 +3,12 @@ import ProductCard from "./components/ProductCard"
 import Btns from "./components/ui/Btns";
 import Inputs from "./components/ui/Inputs";
 import Modal from "./components/ui/Modal";
-import { formInputsList, products } from "./Data";
+import { colors, formInputsList, products } from "./Data";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { IProduct } from "./interfaces/interface";
 import { productValidate } from "./validation";
 import ErrorMsg from "./components/ErrorMsg";
+import CircleColor from "./components/CircleColor";
 const App =()=> {
 
     const [isOpen, setIsOpen] = useState(false)
@@ -31,9 +32,7 @@ const App =()=> {
 
 
   // ** Renders
-  const renderProductList =()=>{
-    return products.map(product=><ProductCard key={product.id} product={product}/>)
-  }
+
 
   // ** Hook State
   const defaultValue ={
@@ -48,7 +47,10 @@ const App =()=> {
   const [product,setProduct] =useState<IProduct>(defaultValue)
 
   const [error,setError]=useState({title:"", description:"",image:"",price:""});
-  console.log(error)
+
+
+const [tempColor,setTempColor] = useState<string [] >([])  
+console.log(tempColor)
   /**
    * Handles the change event on input elements. Updates the state with the corresponding value of the input element.
    * @param e - The change event object.
@@ -66,11 +68,6 @@ const App =()=> {
 
 
 
-  const renderFormInputsList = formInputsList.map(inputs => <div className=" flex flex-col " key={inputs.id}>
-    <label className="text-lg" htmlFor={inputs.id}>{inputs.label}</label>
-    <Inputs type="text" id={inputs.id} name={inputs.name} value={product[inputs.name]} onChange={onChangeHandler}/>
-    <ErrorMsg msg={error[inputs.name]}/>
-  </div>)
   
 
   /**
@@ -109,17 +106,56 @@ function closeBtnForm(){
 close();
 
 }
+  /**
+   * Renders a list of product cards.
+   * @returns A JSX element consisting of a list of product cards.
+   */
+const renderProductList =()=>{
+  return products.map(product=><ProductCard key={product.id} product={product}/>)
+}
+/**
+ * Renders a list of form inputs.
+ */
+const renderFormInputsList = formInputsList.map(inputs => <div className=" flex flex-col " key={inputs.id}>
+  <label className="text-lg" htmlFor={inputs.id}>{inputs.label}</label>
+  <Inputs type="text" id={inputs.id} name={inputs.name} value={product[inputs.name]} onChange={onChangeHandler}/>
+  <ErrorMsg msg={error[inputs.name]}/>
+</div>
+
+)
+
+/**
+ * Renders a list of circle color components.
+ */
+const renderProductColors = colors.map(color=><CircleColor key={color} color={color} onClick={()=>{
+//  لما اضغط علي اللون يضاف مره واحده فقط
+  if(tempColor.includes(color)){
+    // لما اضغط علي الون لو تمت اضافته سابقا يتحذف
+    setTempColor(prev=> prev.filter(item => item!==color))
+  return
+ }
+//  دي علشان لما اطبع لون يتخزن و لما اضغط علي كمان لون يتخزن في مصفوفة وهكذا..
+  setTempColor((prev)=>[...prev,color]);
+}}/>)
 
 return (
   <>
       <main className="container">
-        <Btns className="bg-teal-700 hover:bg-teal-500  duration-300" width="w-full" onClick={open}>Add More</Btns>
+        <Btns className="flex justify-center items-center m-auto bg-teal-700 hover:bg-teal-500  duration-300" width="w-fit" onClick={open}>Add More</Btns>
     <div className=" m-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 p-4 rounded-md" >
  {renderProductList()}
  </div>
  <Modal isOpen={isOpen} close={close} title="Add a New Product">
   <form className="space-y-3" onSubmit={onSubmitHandler}>
   {renderFormInputsList}
+  <div className="flex items-center flex-wrap space-x-2">
+  {renderProductColors}
+  </div>
+  <div className="flex items-center flex-wrap space-x-2">
+    {/* هنا بعمل ماب علشان انشئ مصفوفة جديدة اخزن فيها الالوان وبعدين اطبعها داخل اسبان */}
+  {tempColor.map(color=><span key={color} className="mr-1 mb-1 rounded-lg p-1 text-xs" style={{backgroundColor:color}}>{color}</span>)}
+  </div>
+  
   <div className="flex space-x-2">
 <Btns className="bg-teal-700 hover:bg-teal-500  duration-300" width="w-full">Submit</Btns>
 <Btns className="bg-gray-300 hover:bg-gray-400 text-black  duration-300" width="w-fit" onClick={closeBtnForm}>Cancel</Btns>
